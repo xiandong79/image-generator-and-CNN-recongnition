@@ -31,4 +31,15 @@ An English word image generators, then feed it to machine learning model [prefer
 我修改了 训练数据的生成 的输出，使得它生成的文件的路径 可以直接嵌入 model 使用。
 
  （怎么修改，可参考 https://towardsdatascience.com/faq-build-a-handwritten-text-recognition-system-using-tensorflow-27648fb18519 ）。
+ 
+### Implementation using TF
+
+The implementation in `/src` consists of 4 modules:
+
+	1. SamplePreprocessor.py: prepares the images from the IAM dataset for the NN
+	2. DataLoader.py: reads samples, puts them into batches and provides an iterator-interface to go through the data
+	3. Model.py: creates the model as described above, loads and saves models, manages the TF sessions and provides an interface for training and inference
+	4. main.py: puts all previously mentioned modules together
+
+
 
