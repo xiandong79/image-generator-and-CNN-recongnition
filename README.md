@@ -3,6 +3,8 @@
 
 ## 5. accuracy = 0!!!
 
+注意，训练前需要把 `/model` 文件夹中的 `checkpoint` 和 `snapshot`文件删掉，否则 训练将基于这些历史的`checkpoint` 。
+
 在 `/src` 文件夹中, `python main.py --train` 就可以训练模型，可是训练结果糟糕。
 
 
