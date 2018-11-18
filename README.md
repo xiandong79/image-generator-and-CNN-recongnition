@@ -97,7 +97,7 @@ sudo docker push xiandong/bnp-app
 
 ```bash
 docker pull xiandong/bnp-app
-sudo docker run -d -p 5000:5000 bnp-app
+sudo docker run -d -p 5000:5000 xiandong/bnp-app
 curl  --data input_word="bad" http://localhost:5000/predict
 ```
 
