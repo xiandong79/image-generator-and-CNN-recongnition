@@ -28,19 +28,35 @@ source code is available both on his GitHub as well as a runnable Google Colab n
 
 ## To build our Docker container, run:
 
+在目标文件夹：
+
+```
 sudo docker build -t bnp-app:latest .
+```
 
 ## Run the Docker container
 
 Now let’s run our Docker container to test our app:
 
-`sudo docker run -d -p 5000:5000 bnp-app`
+```
+sudo docker run -d -p 5000:5000 bnp-app
+```
 
 ## Check the status of your container by running
 
-`sudo docker ps -a`
+```
+sudo docker ps -a
+```
+
+## how to debug docker image
+
+```
+docker logs <CONTAINER ID> i.e., f2672b5aff0a
+```
 
 ## Test our model
+
+在另一个命令行：
 
 ```
 curl  --data input_word="good" http://localhost:5000/predict
