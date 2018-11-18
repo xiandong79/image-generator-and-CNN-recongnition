@@ -399,7 +399,10 @@ model.load_weights(weight_file)
 # captures output of softmax so we can decode the output during visualization
 test_func = K.function([input_data], [y_pred])
 
+global model_p
 model_p = Model(inputs=input_data, outputs=y_pred)
+global graph
+graph = tf.get_default_graph()
 
 def decode_predict_ctc(out, top_paths = 1):
     results = []
@@ -435,9 +438,10 @@ def predict():
             b = a.reshape((h, w))
             c = np.expand_dims(a.T, axis=0)
 
-            net_out_value = model_p.predict(c)
-            pred_texts = decode_predict_ctc(net_out_value)
-            top_3_paths = predict_a_image(a, top_paths = 3)
+            with graph.as_default():
+                net_out_value = model_p.predict(c)
+                pred_texts = decode_predict_ctc(net_out_value)
+                top_3_paths = predict_a_image(a, top_paths = 3)
 
             data["pred_texts"] = pred_texts
             data["top_3_paths"] = top_3_paths
