@@ -45,3 +45,14 @@ The implementation in `/src` consists of 4 modules:
 
 
 
+
+# Notice （另一个方案）：
+先在 Ken 也在走另一个路（参考下面的blog），自己生成训练数据 `/utils/image_generator.py` 数据会自动保存在 `/data`
+ 文件夹下。
+ 
+https://nicholastsmith.wordpress.com/2017/10/14/deep-learning-ocr-using-tensorflow-and-python/
+
+接下来是 构建训练模型。@HongzoengNg
+
+# bonus 如何docker化。
+参考链接： https://medium.com/analytics-vidhya/deploy-your-first-deep-learning-model-on-kubernetes-with-python-keras-flask-and-docker-575dc07d9e76
