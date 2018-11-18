@@ -318,8 +318,8 @@ def ctc_lambda_func(args):
     return K.ctc_batch_cost(labels, y_pred, input_length, label_length)
 
 
-
-weight_file = '/Users/dong/Desktop/image_ocr/weights24.h5'
+cwd = os.getcwd()
+weight_file = cwd + '/weights24.h5'
 img_w = 128
 # Input Parameters
 img_h = 64
