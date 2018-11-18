@@ -19,7 +19,7 @@ and finished 3 bonus:
 1. Go to current folder 
 2. Run 
 
-```shell
+```bash
 pythoh bnp_app.py
 ```
 
@@ -27,7 +27,7 @@ pythoh bnp_app.py
 
 1. open another terminal and input (use "small" as an example)
 
-```shell
+```bash
 curl --data input_word="game" http://localhost:5000/predict
 ```
 Then, the prediction result is returned.
@@ -42,7 +42,7 @@ Then, the prediction result is returned.
 
 run:
 
-```
+```bash
 sudo docker build -t bnp-app:latest .
 ```
 
@@ -50,7 +50,7 @@ sudo docker build -t bnp-app:latest .
 
 Now let’s run our Docker container to test our app:
 
-```
+```bash
 sudo docker run -d -p 5000:5000 bnp-app
 docker stop <CONTAINER ID> i.e., bd7b477188a5
 ```
@@ -59,13 +59,13 @@ docker stop <CONTAINER ID> i.e., bd7b477188a5
 
 by running
 
-```
+```bash
 sudo docker ps -a
 ```
 
 #### 2.1.4 Debug docker image
 
-```
+```bash
 docker logs <CONTAINER ID> i.e., f2672b5aff0a
 ```
 
@@ -73,7 +73,7 @@ docker logs <CONTAINER ID> i.e., f2672b5aff0a
 
 open another terminal and input (use "small" as an example)
 
-```shell
+```bash
 curl --data input_word="small" http://localhost:5000/predict
 curl  --data input_word="good" http://localhost:5000/predict
 curl  --data input_word="am" http://localhost:5000/predict
@@ -86,7 +86,7 @@ Then, the result is returned.
 
 #### 2.2.1 Create a Docker Hub
 
-```
+```bash
 sudo docker login
 sudo docker images
 sudo docker tag <IMAGE ID, d03fcc88da88> xiandong/bnp-app
@@ -95,7 +95,11 @@ sudo docker push xiandong/bnp-app
 
 #### 2.2.2 you can pull image
 
-`docker pull xiandong/bnp-app`
+```bash
+docker pull xiandong/bnp-app
+sudo docker run -d -p 5000:5000 bnp-app
+curl  --data input_word="bad" http://localhost:5000/predict
+```
 
 ## 3. The use of Cloud Computing
 
@@ -103,7 +107,7 @@ sudo docker push xiandong/bnp-app
 
 Now we run our docker container in Kubernetes. Note that the image tag is just pointing to our hosted docker image on Docker Hub. In addition, we’ll specify with --port that we want to run our app on port 5000.
 
-```
+```bash
 kubectl run bnp-app --image=xiandong/bnp-app --port 5000
 # We can verify that our pod is running by typing
 kubectl get pods
@@ -115,14 +119,14 @@ kubectl get service
 
 ### 3.2 Test in Kubernetes Cluster
 
-```
+```bash
 # curl --data input_word="bad" http://localhost:5000/predict
 curl  --data input_word="bad" http://<EXTERNAL-IP  of k8s>/predict
 ```
 
 As you can see below, the API correctly returns the label of beagle for the picture.
 
-```
+```bash
 {"pred_texts":["bad"],"top_3_paths":["bad","pbad","kbad"]}
 ```
 
