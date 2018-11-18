@@ -1,66 +1,146 @@
-# BNP
+# BNP Assessment Task
+
+I am Xiandong QI with email: xqiad@connect.ust.hk. I chose the task: 
+
+- An English word image generators, then feed it to machine learning model [preferably neural network] to recognize the word from the image
+
+and finished 3 bonus:
+
+ - Deliver an API to call the program
+ - Push the program as a Docker Image to Docker Hub
+ - Demonstrate the use of Cloud Computing for the solution
 
 
-## 5. accuracy = 0!!!
 
-注意，训练前需要把 `/model` 文件夹中的 `checkpoint` 和 `snapshot`文件删掉，否则 训练将基于这些历史的`checkpoint` 。
+## 1. Quick start
 
-在 `/src` 文件夹中, `python main.py --train` 就可以训练模型，可是训练结果糟糕。
+### 1.1 How to run/set up
 
+1. Go to current folder 
+2. Run 
 
+```shell
+pythoh bnp_app.py
+```
 
-## 1. 从题目s中选择了这个题目
-An English word image generators, then feed it to machine learning model [preferably neural network] to recognize the word from the image
+### 1.2 How to recognize a word
 
-## 2. [Bonus]
+1. open another terminal and input (use "small" as an example)
 
-	o CreatethesimpleHTML+Javascripttoruntheprogram 
-	o Deliver an API to call the program
-	o Push the program as a Docker Image to Docker Hub
-	o Demonstrate the use of Cloud Computing for the solution
-
-## 3. 训练数据的生成 English word image generators
-
-在 /data 文件夹，执行 `python generate_image_and_label_2_IAM_format` 就可以生成训练5000个图像数据 和它对应的 label。
-
-（备用方案）在 `BNP/utils/image_generator.py` 是训练数据的生成脚本。然后这个 `class WordImageGenerator` 的实例化调用（生成数据）在 `ocr_ken.ipnb`. 你可以修改参数（如，图片的像素大小，图片数量，存储路径。）
+```shell
+curl --data input_word="game" http://localhost:5000/predict
+```
+Then, the prediction result is returned.
 
 
-## 4. 选择深度学习模型。
 
-我决定采用 [SimpleHTR-master](https://github.com/githubharald/SimpleHTR ) 这个 model。其说明文档blog 在这里 [build-a-handwritten-text-recognition-system-using-tensorflow](https://towardsdatascience.com/build-a-handwritten-text-recognition-system-using-tensorflow-2326a3487cd5)，
+## 2. Docker image
 
-我修改了 训练数据的生成 的输出，使得它生成的文件的路径 可以直接嵌入 model 使用。
+### 2.1 Test in local docker env
 
- （怎么修改，可参考 https://towardsdatascience.com/faq-build-a-handwritten-text-recognition-system-using-tensorflow-27648fb18519 ）。
- 
-### Implementation using TF
+#### 2.1.1 Build our Docker container 
 
-The implementation in `/src` consists of 4 modules:
+run:
 
-	1. SamplePreprocessor.py: prepares the images from the IAM dataset for the NN
-	2. DataLoader.py: reads samples, puts them into batches and provides an iterator-interface to go through the data
-	3. Model.py: creates the model as described above, loads and saves models, manages the TF sessions and provides an interface for training and inference
-	4. main.py: puts all previously mentioned modules together
+```
+sudo docker build -t bnp-app:latest .
+```
+
+#### 2.1.2 Run the Docker container
+
+Now let’s run our Docker container to test our app:
+
+```
+sudo docker run -d -p 5000:5000 bnp-app
+docker stop <CONTAINER ID> i.e., bd7b477188a5
+```
+
+#### 2.1.3 Check the status of your container 
+
+by running
+
+```
+sudo docker ps -a
+```
+
+#### 2.1.4 Debug docker image
+
+```
+docker logs <CONTAINER ID> i.e., f2672b5aff0a
+```
+
+#### 2.1.5 Test our model
+
+open another terminal and input (use "small" as an example)
+
+```shell
+curl --data input_word="small" http://localhost:5000/predict
+curl  --data input_word="good" http://localhost:5000/predict
+curl  --data input_word="am" http://localhost:5000/predict
+curl  --data input_word="bad" http://localhost:5000/predict
+```
+
+Then, the result is returned.
+
+### 2.2 Push to Docker Hub
+
+#### 2.2.1 Create a Docker Hub
+
+```
+sudo docker login
+sudo docker images
+sudo docker tag <IMAGE ID, d03fcc88da88> xiandong/bnp-app
+sudo docker push xiandong/bnp-app
+```
+
+#### 2.2.2 you can pull image
+
+`docker pull xiandong/bnp-app`
+
+## 3. The use of Cloud Computing
+
+### 3.1 Create a Kubernetes Cluster
+
+Now we run our docker container in Kubernetes. Note that the image tag is just pointing to our hosted docker image on Docker Hub. In addition, we’ll specify with --port that we want to run our app on port 5000.
+
+```
+kubectl run bnp-app --image=xiandong/bnp-app --port 5000
+# We can verify that our pod is running by typing
+kubectl get pods
+# anyone visiting the IP address of our deployment can access our API.
+kubectl expose deployment bnp-app --type=LoadBalancer --port 80 --target-port 5000
+# running
+kubectl get service
+```
+
+### 3.2 Test in Kubernetes Cluster
+
+```
+# curl --data input_word="bad" http://localhost:5000/predict
+curl  --data input_word="bad" http://<EXTERNAL-IP  of k8s>/predict
+```
+
+As you can see below, the API correctly returns the label of beagle for the picture.
+
+```
+{"pred_texts":["bad"],"top_3_paths":["bad","pbad","kbad"]}
+```
 
 
-# Notice （一个方案：有代码，可以运行。）：
+## 4. Reference
 
-代码是 dong_image_ocr.py `python dong_image_ocr.py` 就可运行。
+1. https://github.com/keras-team/keras/blob/master/examples/image_ocr.py
+2. https://medium.com/analytics-vidhya/deploy-your-first-deep-learning-model-on-kubernetes-with-python-keras-flask-and-docker-575dc07d9e76
+3. https://github.com/Tony607/keras-image-ocr
+4. https://www.dlology.com/blog/how-to-train-a-keras-model-to-recognize-variable-length-text/
+5. https://github.com/tensorflow/tensorflow/issues/14356
+6. https://stackoverflow.com/questions/24808043/importerror-no-module-named-scipy
+6. https://github.com/nicholastoddsmith/pythonml
+7. https://www.pyimagesearch.com/2017/07/10/using-tesseract-ocr-python/
+8. https://towardsdatascience.com/intuitively-understanding-connectionist-temporal-classification-3797e43a86c
+9. [Sequence Modeling
+With CTC](https://distill.pub/2017/ctc/)
+10. https://towardsdatascience.com/build-a-handwritten-text-recognition-system-using-tensorflow-2326a3487cd5
+11. https://towardsdatascience.com/faq-build-a-handwritten-text-recognition-system-using-tensorflow-27648fb18519
 
-参考的blog是：
-https://www.dlology.com/blog/how-to-train-a-keras-model-to-recognize-variable-length-text/
 
-source code is available both on his GitHub as well as a runnable Google Colab notebook. 
-但是这个的特点是，word-image-generator 是 on the fly 并不会保存下来。那么，如何封装展示给BNP呢？
-
-# Notice （另一个方案(代码简单，但是代码可读性非常差，建议放弃)）：
-先在 Ken 也在走另一个路（参考下面的blog），自己生成训练数据 `/utils/image_generator.py` 数据会自动保存在 `/data`
- 文件夹下。
- 
-https://nicholastsmith.wordpress.com/2017/10/14/deep-learning-ocr-using-tensorflow-and-python/
-
-接下来是 构建训练模型。@HongzoengNg
-
-# bonus 如何docker化。
-参考链接： https://medium.com/analytics-vidhya/deploy-your-first-deep-learning-model-on-kubernetes-with-python-keras-flask-and-docker-575dc07d9e76
