@@ -374,24 +374,24 @@ class VizCallback(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):
         self.model.save_weights(os.path.join(self.output_dir, 'weights%02d.h5' % (epoch)))
         self.show_edit_distance(256)
-        word_batch = next(self.text_img_gen)[0]
-        res = decode_batch(self.test_func, word_batch['the_input'][0:self.num_display_words])
-        if word_batch['the_input'][0].shape[0] < 256:
-            cols = 2
-        else:
-            cols = 1
-        for i in range(self.num_display_words):
-            plt.subplot(self.num_display_words // cols, cols, i + 1)
-            if K.image_data_format() == 'channels_first':
-                the_input = word_batch['the_input'][i, 0, :, :]
-            else:
-                the_input = word_batch['the_input'][i, :, :, 0]
-            plt.imshow(the_input.T, cmap='Greys_r')
-            plt.xlabel('Truth = \'%s\'\nDecoded = \'%s\'' % (word_batch['source_str'][i], res[i]))
-        fig = plt.gcf()
-        fig.set_size_inches(10, 13)
-        plt.savefig(os.path.join(self.output_dir, 'e%02d.png' % (epoch)))
-        plt.close()
+        # word_batch = next(self.text_img_gen)[0]
+        # res = decode_batch(self.test_func, word_batch['the_input'][0:self.num_display_words])
+        # if word_batch['the_input'][0].shape[0] < 256:
+        #     cols = 2
+        # else:
+        #     cols = 1
+        # for i in range(self.num_display_words):
+        #     plt.subplot(self.num_display_words // cols, cols, i + 1)
+        #     if K.image_data_format() == 'channels_first':
+        #         the_input = word_batch['the_input'][i, 0, :, :]
+        #     else:
+        #         the_input = word_batch['the_input'][i, :, :, 0]
+        #     plt.imshow(the_input.T, cmap='Greys_r')
+        #     plt.xlabel('Truth = \'%s\'\nDecoded = \'%s\'' % (word_batch['source_str'][i], res[i]))
+        # fig = plt.gcf()
+        # fig.set_size_inches(10, 13)
+        # plt.savefig(os.path.join(self.output_dir, 'e%02d.png' % (epoch)))
+        # plt.close()
 
 def train(run_name, start_epoch, stop_epoch, img_w):
     # Input Parameters
@@ -475,14 +475,14 @@ def train(run_name, start_epoch, stop_epoch, img_w):
     # captures output of softmax so we can decode the output during visualization
     test_func = K.function([input_data], [y_pred])
 
-    #viz_cb = VizCallback(run_name, test_func, img_gen.next_val())
+    viz_cb = VizCallback(run_name, test_func, img_gen.next_val())
 
     model.fit_generator(generator=img_gen.next_train(),
                         steps_per_epoch=(words_per_epoch - val_words) // minibatch_size,
                         epochs=stop_epoch,
                         validation_data=img_gen.next_val(),
                         validation_steps=val_words // minibatch_size,
-                        callbacks=[img_gen],
+                        callbacks=[viz_cb, img_gen],
                         initial_epoch=start_epoch)
 
 """### Start the training
@@ -614,7 +614,7 @@ def predict_a_image(a, top_paths = 1):
 
 h = 64
 w = 128
-a = paint_text('this',h = h, w = w)
+a = paint_text('game',h = h, w = w)
 b = a.reshape((h, w))
 # plt.imshow(b, cmap='Greys_r')
 # plt.show()
