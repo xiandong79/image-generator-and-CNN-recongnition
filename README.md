@@ -44,9 +44,14 @@ The implementation in `/src` consists of 4 modules:
 	4. main.py: puts all previously mentioned modules together
 
 
+# Notice （一个方案：有代码，可以运行。）：
 
+https://www.dlology.com/blog/how-to-train-a-keras-model-to-recognize-variable-length-text/
 
-# Notice （另一个方案）：
+source code is available both on his GitHub as well as a runnable Google Colab notebook. 
+但是这个的特点是，word-image-generator 是 on the fly 并不会保存下来。那么，如何封装展示给BNP呢？
+
+# Notice （另一个方案(代码简单，但是代码可读性非常差，建议放弃)）：
 先在 Ken 也在走另一个路（参考下面的blog），自己生成训练数据 `/utils/image_generator.py` 数据会自动保存在 `/data`
  文件夹下。
  
