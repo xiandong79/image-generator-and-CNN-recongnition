@@ -1,5 +1,6 @@
 cairocffi
 scipy
+keras
 absl-py==0.6.1
 astor==0.7.1
 certifi==2018.10.15
