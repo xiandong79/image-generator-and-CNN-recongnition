@@ -46,6 +46,9 @@ The implementation in `/src` consists of 4 modules:
 
 # Notice （一个方案：有代码，可以运行。）：
 
+代码是 dong_image_ocr.py `python dong_image_ocr.py` 就可运行。
+
+参考的blog是：
 https://www.dlology.com/blog/how-to-train-a-keras-model-to-recognize-variable-length-text/
 
 source code is available both on his GitHub as well as a runnable Google Colab notebook. 
