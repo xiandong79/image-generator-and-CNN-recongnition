@@ -101,4 +101,12 @@ curl  --data input_word="bad" http://<EXTERNAL-IP  of k8s>/predict
 3. https://github.com/Tony607/keras-image-ocr
 4. https://www.dlology.com/blog/how-to-train-a-keras-model-to-recognize-variable-length-text/
 5. https://stackoverflow.com/questions/24808043/importerror-no-module-named-scipy
-6.
+6. https://github.com/nicholastoddsmith/pythonml
+7. https://www.pyimagesearch.com/2017/07/10/using-tesseract-ocr-python/
+8. https://towardsdatascience.com/intuitively-understanding-connectionist-temporal-classification-3797e43a86c
+9. [Sequence Modeling
+With CTC](https://distill.pub/2017/ctc/)
+10. https://towardsdatascience.com/build-a-handwritten-text-recognition-system-using-tensorflow-2326a3487cd5
+11. https://towardsdatascience.com/faq-build-a-handwritten-text-recognition-system-using-tensorflow-27648fb18519
+
+
