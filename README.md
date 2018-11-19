@@ -1,6 +1,6 @@
 # BNP Assessment Task
 
-I am Xiandong QI with email: xqiad@connect.ust.hk. I chose the task: 
+I am Xiandong QI with email: xqiad@connect.ust.hk. I chose the following task: 
 
 - An English word image generators, then feed it to machine learning model [preferably neural network] to recognize the word from the image
 
@@ -14,7 +14,7 @@ and finished 3 bonus:
 
 ## 1. Quick start
 
-### 1.1 How to run/set up
+### 1.1 Set up locally
 
 1. Go to current folder 
 2. Run 
@@ -23,18 +23,36 @@ and finished 3 bonus:
 pythoh bnp_app.py
 ```
 
-### 1.2 How to recognize a word
-
-1. open another terminal and input (use "small" as an example)
+3. Open another terminal and input (use word "bad" as an example)
 
 ```bash
-curl --data input_word="game" http://localhost:5000/predict
+curl --data input_word="bad" http://localhost:5000/predict
 ```
 Then, the prediction result is returned.
 
+```bash
+{"pred_texts":["bad"],"top_3_paths":["bad","pbad","kbad"]}
+```
 
 
-## 2. Docker image
+### 1.2 Using docker image
+
+```bash
+docker pull xiandong/bnp-app
+sudo docker run -d -p 5000:5000 xiandong/bnp-app
+curl  --data input_word="bad" http://localhost:5000/predict
+```
+
+### 1.3 Train the model from scratch
+
+```bash
+python train_image_ocr.py
+```
+And a new folder `image_ocr` with the new model weights will be recorded.
+Next, you can replace the model path in `Dockerfile` and `bnp_app.py` as you wish.
+
+
+## 2. Records of Docker image 
 
 ### 2.1 Test in local docker env
 
@@ -52,7 +70,7 @@ Now let’s run our Docker container to test our app:
 
 ```bash
 sudo docker run -d -p 5000:5000 bnp-app
-docker stop <CONTAINER ID> i.e., bd7b477188a5
+# docker stop <CONTAINER ID> i.e., bd7b477188a5
 ```
 
 #### 2.1.3 Check the status of your container 
@@ -93,7 +111,7 @@ sudo docker tag <IMAGE ID, d03fcc88da88> xiandong/bnp-app
 sudo docker push xiandong/bnp-app
 ```
 
-#### 2.2.2 you can pull image
+#### 2.2.2 you can pull image and test
 
 ```bash
 docker pull xiandong/bnp-app
